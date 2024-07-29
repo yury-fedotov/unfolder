@@ -2,6 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 use clap::Parser;
+use std::time::Instant;
 
 /// Program to find and print the largest files in a directory and its subdirectories
 #[derive(Parser)]
@@ -52,6 +53,9 @@ fn find_largest_files(files: Vec<PathBuf>, count: usize) -> Vec<(PathBuf, u64)> 
 }
 
 fn main() {
+    
+    let start_time = Instant::now();
+
     let args = Args::parse();
     let dir = &args.directory;
     let count = args.count;
@@ -60,6 +64,9 @@ fn main() {
     let file_count = files.len();
     let largest_files = find_largest_files(files, count);
 
+    let elapsed_time = start_time.elapsed();
+    println!("Elapsed time: {:?}", elapsed_time);
+    
     println!("Number of files analyzed: {}", file_count);
     println!("Number of directories traversed: {}", dir_count);
     println!();
