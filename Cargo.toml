@@ -1,0 +1,8 @@
+[package]
+name = "unfolder"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+walkdir = "2.3"
+clap = { version = "4.0", features = ["derive"] }
