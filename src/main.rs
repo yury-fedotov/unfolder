@@ -1,9 +1,10 @@
 mod file_utils;
+mod results;
 
 use clap::Parser;
-use colored::*;
 use file_utils::find_largest_files;
 use ignore::WalkBuilder;
+use results::AnalysisResults;
 use std::path::PathBuf;
 use std::time::Instant;
 
@@ -61,31 +62,15 @@ fn main() {
 
     let elapsed_time = start_time.elapsed();
 
-    println!();
-    println!("{}", "Run overview:".bold().underline().yellow());
+    // Create the AnalysisResults struct
+    let results = AnalysisResults {
+        elapsed_time,
+        file_count,
+        dir_count,
+        max_depth,
+        largest_files,
+    };
 
-    println!("{}", format!("Elapsed time: {:?}", elapsed_time).blue());
-    println!(
-        "{}",
-        format!("Number of files analyzed: {}", file_count).green()
-    );
-    println!(
-        "{}",
-        format!("Number of directories traversed: {}", dir_count).green()
-    );
-    println!(
-        "{}",
-        format!("Deepest level of folder nesting: {}", max_depth).green()
-    );
-
-    println!();
-    println!("{}", "Largest files:".bold().underline().yellow());
-
-    for (file, size) in largest_files {
-        println!(
-            "{}: {} bytes",
-            file.display().to_string().cyan(),
-            size.to_string().magenta()
-        );
-    }
+    // Call the print_results method on the results instance
+    results.print_results();
 }
