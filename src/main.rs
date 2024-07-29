@@ -1,8 +1,8 @@
 use clap::Parser;
+use ignore::WalkBuilder;
 use std::fs;
 use std::path::PathBuf;
 use std::time::Instant;
-use walkdir::WalkDir;
 
 /// Program to find and print the largest files in a directory and its subdirectories
 #[derive(Parser)]
@@ -17,14 +17,19 @@ struct Args {
 
 fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
     let mut dir_count = 1;
-    let files: Vec<PathBuf> = WalkDir::new(dir)
-        .into_iter()
+    let files: Vec<PathBuf> = WalkBuilder::new(dir)
+        .hidden(false)
+        .ignore(true)
+        .git_ignore(true)
+        .git_global(true)
+        .git_exclude(true)
+        .build()
         .filter_map(|e| e.ok())
         .filter_map(|entry| {
-            if entry.file_type().is_dir() {
+            if entry.file_type().map_or(false, |ft| ft.is_dir()) {
                 dir_count += 1;
             }
-            if entry.file_type().is_file() {
+            if entry.file_type().map_or(false, |ft| ft.is_file()) {
                 Some(entry.into_path())
             } else {
                 None
