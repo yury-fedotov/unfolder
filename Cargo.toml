@@ -7,3 +7,4 @@ edition = "2021"
 walkdir = "2.3"
 clap = { version = "4.0", features = ["derive"] }
 ignore = "0.4"
+colored = "2.0"
