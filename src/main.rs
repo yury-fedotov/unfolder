@@ -19,7 +19,7 @@ fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
     let files: Vec<PathBuf> = WalkDir::new(dir)
         .into_iter()
         .filter_map(|e| e.ok())
-        .map(|entry| {
+        .filter_map(|entry| {
             if entry.file_type().is_dir() {
                 dir_count += 1;
             }
@@ -29,7 +29,6 @@ fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
                 None
             }
         })
-        .filter_map(|e| e)
         .collect();
 
     (files, dir_count)
