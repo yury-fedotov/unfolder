@@ -18,7 +18,7 @@ struct Args {
 fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
     let mut dir_count = 1;
     let files: Vec<PathBuf> = WalkBuilder::new(dir)
-        .hidden(false)
+        .hidden(true)
         .ignore(true)
         .git_ignore(true)
         .git_global(true)
