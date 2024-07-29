@@ -15,8 +15,9 @@ struct Args {
     count: usize,
 }
 
-fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
+fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize, usize) {
     let mut dir_count = 1;
+    let mut max_depth = 0;
     let files: Vec<PathBuf> = WalkBuilder::new(dir)
         .hidden(true)
         .ignore(true)
@@ -26,6 +27,10 @@ fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
         .build()
         .filter_map(|e| e.ok())
         .filter_map(|entry| {
+            let depth = entry.depth();
+            if depth > max_depth {
+                max_depth = depth;
+            }
             if entry.file_type().map_or(false, |ft| ft.is_dir()) {
                 dir_count += 1;
             }
@@ -37,7 +42,7 @@ fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize) {
         })
         .collect();
 
-    (files, dir_count)
+    (files, dir_count, max_depth)
 }
 
 fn get_file_size(path: &PathBuf) -> u64 {
@@ -66,7 +71,7 @@ fn main() {
     let dir = &args.directory;
     let count = args.count;
 
-    let (files, dir_count) = get_files_in_dir(dir);
+    let (files, dir_count, max_depth) = get_files_in_dir(dir);
     let file_count = files.len();
     let largest_files = find_largest_files(files, count);
 
@@ -75,6 +80,7 @@ fn main() {
 
     println!("Number of files analyzed: {}", file_count);
     println!("Number of directories traversed: {}", dir_count);
+    println!("Maximum traversal depth: {}", max_depth);
     println!();
 
     for (file, size) in largest_files {
