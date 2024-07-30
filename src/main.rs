@@ -14,12 +14,10 @@ fn main() {
     let start_time = Instant::now();
 
     let args = Args::parse();
-    let dir = &args.directory;
-    let count = args.count;
 
-    let traverval_output = traverse_directory(dir);
+    let traverval_output = traverse_directory(&args.directory);
     let file_count = traverval_output.file_infos.len();
-    let largest_files = get_largest_files(&traverval_output.file_infos, count);
+    let largest_files = get_largest_files(&traverval_output.file_infos, &args.count);
     let dir_count = traverval_output.dir_count;
     let max_depth = traverval_output.max_depth;
 

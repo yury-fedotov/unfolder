@@ -45,10 +45,10 @@ pub fn calculate_hash(path: &PathBuf) -> io::Result<String> {
     Ok(format!("{:x}", hash))
 }
 
-pub fn get_largest_files(files: &[FileInfo], count: usize) -> Vec<FileInfo> {
+pub fn get_largest_files(files: &[FileInfo], count: &usize) -> Vec<FileInfo> {
     let mut sorted_files: Vec<&FileInfo> = files.iter().collect();
     sorted_files.sort_by(|a, b| b.size.cmp(&a.size));
-    sorted_files.into_iter().take(count).cloned().collect()
+    sorted_files.into_iter().take(*count).cloned().collect()
 }
 
 pub fn find_duplicate_groups(files: &[FileInfo]) {
