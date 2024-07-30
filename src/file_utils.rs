@@ -42,7 +42,7 @@ pub fn find_duplicate_groups(files: &[FileInfo]) {
         if !file.hash.is_empty() {
             hash_map
                 .entry(&file.hash)
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(file);
         }
     }
@@ -77,12 +77,12 @@ mod tests {
         fs::write(&file_path, content).unwrap();
 
         // Verify the size of the file
-        let path = PathBuf::from(file_path);
+        let path = file_path;
         let size = get_file_size(&path);
         assert_eq!(size, content.len() as u64);
 
         // Verify the function handles non-existent files gracefully
-        let non_existent_path = PathBuf::from(dir.path().join("non_existent_file.txt"));
+        let non_existent_path = dir.path().join("non_existent_file.txt");
         let size = get_file_size(&non_existent_path);
         assert_eq!(size, 0);
     }
