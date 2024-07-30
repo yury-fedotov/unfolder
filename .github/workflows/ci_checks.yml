@@ -1,4 +1,4 @@
-name: Static analysis and software tests
+name: CI checks
 
 on:
   push:
