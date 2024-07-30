@@ -1,23 +1,14 @@
+use clap::Parser;
+mod cli;
 mod file_utils;
 mod results;
 mod traversal;
 
-use clap::Parser;
+use cli::Args;
 use file_utils::{find_duplicate_groups, get_largest_files};
 use results::AnalysisResults;
 use std::time::Instant;
 use traversal::traverse_directory;
-
-/// Program to find and print the largest files in a directory and its subdirectories
-#[derive(Parser)]
-struct Args {
-    /// The directory to search
-    directory: String,
-
-    /// The number of largest files to find
-    #[clap(short, long, default_value_t = 5)]
-    count: usize,
-}
 
 fn main() {
     let start_time = Instant::now();
