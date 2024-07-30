@@ -1,6 +1,19 @@
 use std::fs;
 use std::path::PathBuf;
 
+/// Retrieves the size of a file.
+///
+/// This function takes a path to a file and returns its size in bytes. If the file does not
+/// exist or an error occurs while accessing the file metadata, it returns 0.
+///
+/// # Arguments
+///
+/// * `path` - A `PathBuf` representing the path to the file.
+///
+/// # Returns
+///
+/// Returns a `u64` representing the size of the file in bytes. If the file cannot be accessed or
+/// does not exist, it returns 0.
 pub fn get_file_size(path: &PathBuf) -> u64 {
     fs::metadata(path)
         .map(|metadata| metadata.len())
