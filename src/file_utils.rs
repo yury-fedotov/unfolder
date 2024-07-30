@@ -40,10 +40,7 @@ pub fn find_duplicate_groups(files: &[FileInfo]) {
     // Group files by their hash
     for file in files {
         if !file.hash.is_empty() {
-            hash_map
-                .entry(&file.hash)
-                .or_default()
-                .push(file);
+            hash_map.entry(&file.hash).or_default().push(file);
         }
     }
 
