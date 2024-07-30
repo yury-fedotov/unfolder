@@ -1,5 +1,7 @@
+use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
+use std::io::{self, Read};
 use std::path::PathBuf;
 
 #[derive(Clone)]
@@ -26,6 +28,21 @@ pub fn get_file_size(path: &PathBuf) -> u64 {
     fs::metadata(path)
         .map(|metadata| metadata.len())
         .unwrap_or(0)
+}
+
+pub fn calculate_hash(path: &PathBuf) -> io::Result<String> {
+    let mut file = fs::File::open(path)?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0; 1024];
+    loop {
+        let n = file.read(&mut buffer)?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buffer[..n]);
+    }
+    let hash = hasher.finalize();
+    Ok(format!("{:x}", hash))
 }
 
 pub fn get_largest_files(files: &[FileInfo], count: usize) -> Vec<FileInfo> {
