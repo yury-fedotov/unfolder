@@ -8,5 +8,5 @@ pub struct Args {
 
     /// The number of largest files to find
     #[clap(short, long, default_value_t = 5)]
-    pub count: usize,
+    pub n_top: usize,
 }

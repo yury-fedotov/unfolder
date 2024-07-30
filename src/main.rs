@@ -17,7 +17,7 @@ fn main() {
 
     let traverval_output = traverse_directory(&args.directory);
     let file_count = traverval_output.file_infos.len();
-    let largest_files = get_largest_files(&traverval_output.file_infos, &args.count);
+    let largest_files = get_largest_files(&traverval_output.file_infos, &args.n_top);
     let dir_count = traverval_output.dir_count;
     let max_depth = traverval_output.max_depth;
 
