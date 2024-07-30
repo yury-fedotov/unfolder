@@ -5,9 +5,9 @@ use std::fs;
 use std::io::{self, Read};
 
 use clap::Parser;
-use file_utils::{find_duplicate_groups, get_largest_files, get_file_size, FileInfo};
+use file_utils::{find_duplicate_groups, get_file_size, get_largest_files, FileInfo};
 use ignore::WalkBuilder;
-use results::AnalysisResults;
+use results::{AnalysisResults, DirectoryTraversalOutput};
 use std::path::PathBuf;
 use std::time::Instant;
 
@@ -37,10 +37,10 @@ struct Args {
     count: usize,
 }
 
-fn get_files_in_dir(dir: &str) -> (Vec<FileInfo>, usize, usize) {
+fn traverse_directory(dir: &str) -> DirectoryTraversalOutput {
     let mut dir_count = 1;
     let mut max_depth = 0;
-    let files_info: Vec<FileInfo> = WalkBuilder::new(dir)
+    let file_infos: Vec<FileInfo> = WalkBuilder::new(dir)
         .hidden(true)
         .ignore(true)
         .git_ignore(true)
@@ -75,7 +75,11 @@ fn get_files_in_dir(dir: &str) -> (Vec<FileInfo>, usize, usize) {
         })
         .collect();
 
-    (files_info, dir_count, max_depth)
+    DirectoryTraversalOutput {
+        file_infos,
+        dir_count,
+        max_depth,
+    }
 }
 
 fn main() {
@@ -85,9 +89,11 @@ fn main() {
     let dir = &args.directory;
     let count = args.count;
 
-    let (files, dir_count, max_depth) = get_files_in_dir(dir);
-    let file_count = files.len();
-    let largest_files = get_largest_files(&files, count);
+    let traverval_output = traverse_directory(dir);
+    let file_count = traverval_output.file_infos.len();
+    let largest_files = get_largest_files(&traverval_output.file_infos, count);
+    let dir_count = traverval_output.dir_count;
+    let max_depth = traverval_output.max_depth;
 
     let elapsed_time = start_time.elapsed();
 
@@ -103,5 +109,5 @@ fn main() {
     // Call the print_results method on the results instance
     results.print_results();
 
-    find_duplicate_groups(&files);
+    find_duplicate_groups(&traverval_output.file_infos);
 }

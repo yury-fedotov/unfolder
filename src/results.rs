@@ -69,3 +69,9 @@ fn format_size(size: u64) -> String {
         format!("{} bytes", size)
     }
 }
+
+pub struct DirectoryTraversalOutput {
+    pub file_infos: Vec<FileInfo>,
+    pub dir_count: usize,
+    pub max_depth: usize,
+}
