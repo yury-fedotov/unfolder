@@ -5,7 +5,7 @@ use std::fs;
 use std::io::{self, Read};
 
 use clap::Parser;
-use file_utils::{find_duplicate_groups, find_largest_files, get_file_size, FileInfo};
+use file_utils::{find_duplicate_groups, get_largest_files, get_file_size, FileInfo};
 use ignore::WalkBuilder;
 use results::AnalysisResults;
 use std::path::PathBuf;
@@ -87,7 +87,7 @@ fn main() {
 
     let (files, dir_count, max_depth) = get_files_in_dir(dir);
     let file_count = files.len();
-    let largest_files = find_largest_files(&files, count);
+    let largest_files = get_largest_files(&files, count);
 
     let elapsed_time = start_time.elapsed();
 
