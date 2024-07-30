@@ -9,3 +9,4 @@ clap = { version = "4.0", features = ["derive"] }
 ignore = "0.4"
 colored = "2.0"
 tempfile = "3.3"
+num-format = "0.4"

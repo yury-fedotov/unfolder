@@ -1,4 +1,5 @@
 use colored::*;
+use num_format::{Locale, ToFormattedString};
 use std::path::PathBuf;
 
 /// Struct to hold the results of the file analysis
@@ -20,13 +21,18 @@ impl AnalysisResults {
             "{}",
             format!("Elapsed time: {:?}", self.elapsed_time).blue()
         );
+
+        // Format file_count and dir_count with thousand separators
+        let file_count_formatted = self.file_count.to_formatted_string(&Locale::en);
+        let dir_count_formatted = self.dir_count.to_formatted_string(&Locale::en);
+
         println!(
             "{}",
-            format!("Number of files analyzed: {}", self.file_count).green()
+            format!("Number of files analyzed: {}", file_count_formatted).green()
         );
         println!(
             "{}",
-            format!("Number of directories traversed: {}", self.dir_count).green()
+            format!("Number of directories traversed: {}", dir_count_formatted).green()
         );
         println!(
             "{}",
@@ -40,7 +46,7 @@ impl AnalysisResults {
             println!(
                 "{}: {} bytes",
                 file.display().to_string().cyan(),
-                size.to_string().magenta()
+                size.to_formatted_string(&Locale::en).magenta()
             );
         }
     }
