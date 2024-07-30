@@ -1,10 +1,9 @@
-use clap::Parser;
 mod cli;
 mod file_utils;
 mod results;
 mod traversal;
 
-use cli::Args;
+use cli::parse_args;
 use file_utils::{find_duplicate_groups, get_largest_files};
 use results::AnalysisResults;
 use std::time::Instant;
@@ -13,7 +12,7 @@ use traversal::traverse_directory;
 fn main() {
     let start_time = Instant::now();
 
-    let args = Args::parse();
+    let args = parse_args();
 
     let traverval_output = traverse_directory(&args.directory);
     let file_count = traverval_output.file_infos.len();
