@@ -1,6 +1,8 @@
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
+#[derive(Clone)]
 pub struct FileInfo {
     pub path: PathBuf,
     pub size: u64,
@@ -26,10 +28,37 @@ pub fn get_file_size(path: &PathBuf) -> u64 {
         .unwrap_or(0)
 }
 
-pub fn find_largest_files(files: Vec<FileInfo>, count: usize) -> Vec<FileInfo> {
-    let mut sorted_files: Vec<FileInfo> = files.into_iter().collect();
+pub fn find_largest_files(files: &[FileInfo], count: usize) -> Vec<FileInfo> {
+    let mut sorted_files: Vec<&FileInfo> = files.iter().collect();
     sorted_files.sort_by(|a, b| b.size.cmp(&a.size));
-    sorted_files.into_iter().take(count).collect()
+    sorted_files.into_iter().take(count).cloned().collect()
+}
+
+pub fn find_duplicate_groups(files: &[FileInfo]) {
+    let mut hash_map: HashMap<&String, Vec<&FileInfo>> = HashMap::new();
+
+    // Group files by their hash
+    for file in files {
+        if !file.hash.is_empty() {
+            hash_map
+                .entry(&file.hash)
+                .or_insert_with(Vec::new)
+                .push(file);
+        }
+    }
+
+    // Filter out groups with empty hashes and sort by group size in descending order
+    let mut groups: Vec<_> = hash_map.into_iter().filter(|(_, v)| v.len() > 1).collect();
+    groups.sort_by(|a, b| b.1.len().cmp(&a.1.len()).reverse());
+
+    // Print the largest groups of duplicates
+    for (hash, group) in groups {
+        println!("Hash: {}", hash);
+        for file in group {
+            println!("    {} (size: {})", file.path.display(), file.size);
+        }
+        println!();
+    }
 }
 
 #[cfg(test)]
