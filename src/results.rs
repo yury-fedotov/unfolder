@@ -1,6 +1,7 @@
+use crate::file_utils::FileInfo;
+
 use colored::*;
 use num_format::{Locale, ToFormattedString};
-use std::path::PathBuf;
 
 /// Struct to hold the results of the file analysis
 pub struct AnalysisResults {
@@ -8,7 +9,7 @@ pub struct AnalysisResults {
     pub file_count: usize,
     pub dir_count: usize,
     pub max_depth: usize,
-    pub largest_files: Vec<(PathBuf, u64)>,
+    pub largest_files: Vec<FileInfo>,
 }
 
 impl AnalysisResults {
@@ -42,11 +43,11 @@ impl AnalysisResults {
         println!();
         println!("{}", "Largest files:".bold().underline().yellow());
 
-        for (file, size) in &self.largest_files {
+        for file in &self.largest_files {
             println!(
                 "{}: {}",
-                file.display().to_string().cyan(),
-                format_size(*size).magenta()
+                file.path.display().to_string().cyan(),
+                format_size(file.size).magenta()
             );
         }
     }

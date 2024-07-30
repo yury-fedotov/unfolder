@@ -1,12 +1,30 @@
 mod file_utils;
 mod results;
+use sha2::{Digest, Sha256};
+use std::fs;
+use std::io::{self, Read};
 
 use clap::Parser;
-use file_utils::find_largest_files;
+use file_utils::{find_largest_files, get_file_size, FileInfo};
 use ignore::WalkBuilder;
 use results::AnalysisResults;
 use std::path::PathBuf;
 use std::time::Instant;
+
+fn calculate_hash(path: &PathBuf) -> io::Result<String> {
+    let mut file = fs::File::open(path)?;
+    let mut hasher = Sha256::new();
+    let mut buffer = [0; 1024];
+    loop {
+        let n = file.read(&mut buffer)?;
+        if n == 0 {
+            break;
+        }
+        hasher.update(&buffer[..n]);
+    }
+    let hash = hasher.finalize();
+    Ok(format!("{:x}", hash))
+}
 
 /// Program to find and print the largest files in a directory and its subdirectories
 #[derive(Parser)]
@@ -19,10 +37,10 @@ struct Args {
     count: usize,
 }
 
-fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize, usize) {
+fn get_files_in_dir(dir: &str) -> (Vec<FileInfo>, usize, usize) {
     let mut dir_count = 1;
     let mut max_depth = 0;
-    let files: Vec<PathBuf> = WalkBuilder::new(dir)
+    let files_info: Vec<FileInfo> = WalkBuilder::new(dir)
         .hidden(true)
         .ignore(true)
         .git_ignore(true)
@@ -39,14 +57,25 @@ fn get_files_in_dir(dir: &str) -> (Vec<PathBuf>, usize, usize) {
                 dir_count += 1;
             }
             if entry.file_type().map_or(false, |ft| ft.is_file()) {
-                Some(entry.into_path())
+                let path = entry.into_path();
+                let size = get_file_size(&path);
+                let hash = if size > 3 * 1024 * 1024 {
+                    // 3MB in bytes
+                    match calculate_hash(&path) {
+                        Ok(hash) => hash,
+                        Err(_) => String::new(),
+                    }
+                } else {
+                    String::new()
+                };
+                Some(FileInfo { path, size, hash })
             } else {
                 None
             }
         })
         .collect();
 
-    (files, dir_count, max_depth)
+    (files_info, dir_count, max_depth)
 }
 
 fn main() {
