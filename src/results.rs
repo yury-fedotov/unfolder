@@ -17,10 +17,10 @@ impl AnalysisResults {
         println!();
         println!("{}", "Run overview:".bold().underline().yellow());
 
-        println!(
-            "{}",
-            format!("Elapsed time: {:?}", self.elapsed_time).blue()
-        );
+        // Convert elapsed time to milliseconds and round to nearest integer
+        let elapsed_ms = (self.elapsed_time.as_millis() as f64).round();
+
+        println!("{}", format!("Elapsed time: {} ms", elapsed_ms).blue());
 
         // Format file_count and dir_count with thousand separators
         let file_count_formatted = self.file_count.to_formatted_string(&Locale::en);
@@ -44,10 +44,27 @@ impl AnalysisResults {
 
         for (file, size) in &self.largest_files {
             println!(
-                "{}: {} bytes",
+                "{}: {}",
                 file.display().to_string().cyan(),
-                size.to_formatted_string(&Locale::en).magenta()
+                format_size(*size).magenta()
             );
         }
+    }
+}
+
+/// Converts bytes into a human-readable format (bytes, KB, MB, GB)
+fn format_size(size: u64) -> String {
+    const KB: u64 = 1024;
+    const MB: u64 = KB * 1024;
+    const GB: u64 = MB * 1024;
+
+    if size >= GB {
+        format!("{:.2} GB", size as f64 / GB as f64)
+    } else if size >= MB {
+        format!("{:.2} MB", size as f64 / MB as f64)
+    } else if size >= KB {
+        format!("{:.2} KB", size as f64 / KB as f64)
+    } else {
+        format!("{} bytes", size)
     }
 }
