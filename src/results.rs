@@ -9,6 +9,7 @@ pub struct AnalysisResults {
     pub elapsed_time: std::time::Duration,
     pub complete_statistics: CompleteTraversalStatistics,
     pub largest_files: Vec<FileInfo>,
+    pub duplicate_groups: Vec<(String, Vec<FileInfo>)>,
 }
 
 impl AnalysisResults {
@@ -58,6 +59,15 @@ impl AnalysisResults {
                 file.path.display().to_string().cyan(),
                 format_size(file.size).magenta()
             );
+        }
+
+        println!();
+        for (hash, group) in &self.duplicate_groups {
+            println!("Hash: {}", hash);
+            for file in group {
+                println!("{} (size: {})", file.path.display(), file.size);
+            }
+            println!();
         }
     }
 }

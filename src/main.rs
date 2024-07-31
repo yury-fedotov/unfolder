@@ -16,18 +16,16 @@ fn main() {
 
     let traversal_output = traverse_directory(&args.directory, &args.min_file_size);
     let largest_files = get_largest_files(&traversal_output.file_infos, &args.n_top);
+    let duplicate_groups = find_duplicate_groups(&traversal_output.file_infos);
 
     let elapsed_time = start_time.elapsed();
 
-    // Create the AnalysisResults struct
     let results = AnalysisResults {
         elapsed_time,
         complete_statistics: traversal_output.complete_statistics,
         largest_files,
+        duplicate_groups,
     };
 
-    // Call the print_results method on the results instance
     results.print_results();
-
-    find_duplicate_groups(&traversal_output.file_infos);
 }

@@ -51,28 +51,23 @@ pub fn get_largest_files(files: &[FileInfo], count: &usize) -> Vec<FileInfo> {
     sorted_files.into_iter().take(*count).cloned().collect()
 }
 
-pub fn find_duplicate_groups(files: &[FileInfo]) {
-    let mut hash_map: HashMap<&String, Vec<&FileInfo>> = HashMap::new();
+pub fn find_duplicate_groups(files: &[FileInfo]) -> Vec<(String, Vec<FileInfo>)> {
+    let mut hash_map: HashMap<String, Vec<FileInfo>> = HashMap::new();
 
     // Group files by their hash
     for file in files {
         if !file.hash.is_empty() {
-            hash_map.entry(&file.hash).or_default().push(file);
+            hash_map
+                .entry(file.hash.clone())
+                .or_default()
+                .push(file.clone());
         }
     }
 
     // Filter out groups with empty hashes and sort by group size in descending order
     let mut groups: Vec<_> = hash_map.into_iter().filter(|(_, v)| v.len() > 1).collect();
     groups.sort_by(|a, b| b.1.len().cmp(&a.1.len()).reverse());
-
-    // Print the largest groups of duplicates
-    for (hash, group) in groups {
-        println!("Hash: {}", hash);
-        for file in group {
-            println!("    {} (size: {})", file.path.display(), file.size);
-        }
-        println!();
-    }
+    groups
 }
 
 #[cfg(test)]
