@@ -1,4 +1,5 @@
 mod cli;
+mod file_sizes;
 mod file_utils;
 mod results;
 mod traversal;
