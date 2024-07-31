@@ -1,4 +1,5 @@
 use crate::file_utils::FileInfo;
+use crate::traversal::CompleteTraversalStatistics;
 
 use colored::*;
 use num_format::{Locale, ToFormattedString};
@@ -6,9 +7,7 @@ use num_format::{Locale, ToFormattedString};
 /// Struct to hold the results of the file analysis
 pub struct AnalysisResults {
     pub elapsed_time: std::time::Duration,
-    pub file_count: usize,
-    pub dir_count: usize,
-    pub max_depth: usize,
+    pub complete_statistics: CompleteTraversalStatistics,
     pub largest_files: Vec<FileInfo>,
 }
 
@@ -23,9 +22,15 @@ impl AnalysisResults {
 
         println!("{}", format!("Elapsed time: {} ms", elapsed_ms).blue());
 
-        // Format file_count and dir_count with thousand separators
-        let file_count_formatted = self.file_count.to_formatted_string(&Locale::en);
-        let dir_count_formatted = self.dir_count.to_formatted_string(&Locale::en);
+        // Format file_count and dir_count with a thousand separators
+        let file_count_formatted = self
+            .complete_statistics
+            .n_files_analyzed
+            .to_formatted_string(&Locale::en);
+        let dir_count_formatted = self
+            .complete_statistics
+            .n_directories_visited
+            .to_formatted_string(&Locale::en);
 
         println!(
             "{}",
@@ -37,7 +42,11 @@ impl AnalysisResults {
         );
         println!(
             "{}",
-            format!("Deepest level of folder nesting: {}", self.max_depth).green()
+            format!(
+                "Deepest level of folder nesting: {}",
+                self.complete_statistics.max_depth_visited
+            )
+            .green()
         );
 
         println!();

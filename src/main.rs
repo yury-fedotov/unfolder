@@ -15,19 +15,14 @@ fn main() {
     let args = parse_args();
 
     let traversal_output = traverse_directory(&args.directory, &args.min_file_size);
-    let file_count = traversal_output.file_infos.len();
     let largest_files = get_largest_files(&traversal_output.file_infos, &args.n_top);
-    let dir_count = traversal_output.dir_count;
-    let max_depth = traversal_output.max_depth;
 
     let elapsed_time = start_time.elapsed();
 
     // Create the AnalysisResults struct
     let results = AnalysisResults {
         elapsed_time,
-        file_count,
-        dir_count,
-        max_depth,
+        complete_statistics: traversal_output.complete_statistics,
         largest_files,
     };
 
