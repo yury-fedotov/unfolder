@@ -31,11 +31,7 @@ pub fn traverse_directory(dir: &str, min_file_size: &usize) -> DirectoryTraversa
                 let path = entry.into_path();
                 let size = get_file_size(&path);
                 let hash = if size > *min_file_size as u64 {
-                    // 3MB in bytes
-                    match calculate_hash(&path) {
-                        Ok(hash) => hash,
-                        Err(_) => String::new(),
-                    }
+                    calculate_hash(&path).unwrap_or_else(|_| String::new())
                 } else {
                     String::new()
                 };
