@@ -1,11 +1,5 @@
+use crate::file_sizes::{GIGABYTE, KILOBYTE, MEGABYTE};
 use clap::{Arg, Command};
-
-const THOUSAND: usize = 1000;
-const MEGA_THOUSAND_EXPONENT: u32 = 2;
-const GIGA_THOUSAND_EXPONENT: u32 = 3;
-const KILOBYTE: usize = THOUSAND;
-const MEGABYTE: usize = THOUSAND.pow(MEGA_THOUSAND_EXPONENT);
-const GIGABYTE: usize = THOUSAND.pow(GIGA_THOUSAND_EXPONENT);
 
 const SIZE_ALIASES: &[(&str, usize)] = &[
     ("blank", 0),
