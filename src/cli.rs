@@ -1,16 +1,23 @@
 use clap::{Arg, Command};
 
+const THOUSAND: usize = 1000;
+const MEGA_THOUSAND_EXPONENT: u32 = 2;
+const GIGA_THOUSAND_EXPONENT: u32 = 3;
+const KILOBYTE: usize = THOUSAND;
+const MEGABYTE: usize = THOUSAND.pow(MEGA_THOUSAND_EXPONENT);
+const GIGABYTE: usize = THOUSAND.pow(GIGA_THOUSAND_EXPONENT);
+
 const SIZE_ALIASES: &[(&str, usize)] = &[
-    ("blank", 1024),               // 1 KB
-    ("config", 10 * 1024),         // 10 KB
-    ("code", 100 * 1024),          // 100 KB
-    ("excel", 1024 * 1024),        // 1 MB
-    ("document", 5 * 1024 * 1024), // 5 MB
-    ("image", 10 * 1024 * 1024),   // 10 MB
-    ("gif", 20 * 1024 * 1024),     // 20 MB
-    ("audio", 50 * 1024 * 1024),   // 50 MB
-    ("video", 500 * 1024 * 1024),  // 500 MB
-    ("large", 1024 * 1024 * 1024), // 1 GB
+    ("blank", 0),
+    ("config", 10),
+    ("code", 100 * KILOBYTE),
+    ("excel", MEGABYTE),
+    ("document", 5 * MEGABYTE),
+    ("image", 10 * MEGABYTE),
+    ("gif", 20 * MEGABYTE),
+    ("audio", 50 * MEGABYTE),
+    ("video", 500 * MEGABYTE),
+    ("large", GIGABYTE),
 ];
 
 fn get_size_by_alias(alias: &str) -> Option<usize> {
@@ -62,7 +69,7 @@ pub fn parse_args() -> CLIArgs {
         .map(|s| s.parse().unwrap_or(5)) // Parse the value and default to 5 on error
         .unwrap_or(5);
 
-    let min_file_size = get_size_by_alias(size_alias.as_str()).unwrap_or(1024 * 1024 * 1024); // Default to 1 GB if alias not found
+    let min_file_size = get_size_by_alias(size_alias.as_str()).unwrap_or(MEGABYTE); // Default to 1 MB if alias not found
 
     CLIArgs {
         directory,
