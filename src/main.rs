@@ -14,11 +14,11 @@ fn main() {
 
     let args = parse_args();
 
-    let traverval_output = traverse_directory(&args.directory);
-    let file_count = traverval_output.file_infos.len();
-    let largest_files = get_largest_files(&traverval_output.file_infos, &args.n_top);
-    let dir_count = traverval_output.dir_count;
-    let max_depth = traverval_output.max_depth;
+    let traversal_output = traverse_directory(&args.directory);
+    let file_count = traversal_output.file_infos.len();
+    let largest_files = get_largest_files(&traversal_output.file_infos, &args.n_top);
+    let dir_count = traversal_output.dir_count;
+    let max_depth = traversal_output.max_depth;
 
     let elapsed_time = start_time.elapsed();
 
@@ -34,5 +34,5 @@ fn main() {
     // Call the print_results method on the results instance
     results.print_results();
 
-    find_duplicate_groups(&traverval_output.file_infos);
+    find_duplicate_groups(&traversal_output.file_infos);
 }
