@@ -14,7 +14,7 @@ fn main() {
 
     let args = parse_args();
 
-    let traversal_output = traverse_directory(&args.directory);
+    let traversal_output = traverse_directory(&args.directory, &args.min_file_size);
     let file_count = traversal_output.file_infos.len();
     let largest_files = get_largest_files(&traversal_output.file_infos, &args.n_top);
     let dir_count = traversal_output.dir_count;
