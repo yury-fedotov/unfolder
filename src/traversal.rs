@@ -8,7 +8,7 @@ pub struct DirectoryTraversalOutput {
     pub max_depth: usize,
 }
 
-pub fn traverse_directory(dir: &str) -> DirectoryTraversalOutput {
+pub fn traverse_directory(dir: &str, min_file_size: &usize) -> DirectoryTraversalOutput {
     let mut dir_count = 1;
     let mut max_depth = 0;
     let file_infos: Vec<FileInfo> = WalkBuilder::new(dir)
@@ -30,7 +30,7 @@ pub fn traverse_directory(dir: &str) -> DirectoryTraversalOutput {
             if entry.file_type().map_or(false, |ft| ft.is_file()) {
                 let path = entry.into_path();
                 let size = get_file_size(&path);
-                let hash = if size > 3 * 1024 * 1024 {
+                let hash = if size > *min_file_size as u64 {
                     // 3MB in bytes
                     match calculate_hash(&path) {
                         Ok(hash) => hash,
