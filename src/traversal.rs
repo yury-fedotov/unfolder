@@ -1,7 +1,7 @@
+use crate::file_utils;
 use crate::file_utils::FileInfo;
 use crate::file_utils::{calculate_hash, get_file_size};
 use ignore::WalkBuilder;
-use std::path::Path;
 
 pub struct DirectoryTraversalOutput {
     pub complete_statistics: CompleteTraversalStatistics,
@@ -12,15 +12,6 @@ pub struct CompleteTraversalStatistics {
     pub n_files_analyzed: usize,
     pub n_directories_visited: usize,
     pub max_depth_visited: usize,
-}
-
-fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
-    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
-        return extensions
-            .iter()
-            .any(|ext| ext.eq_ignore_ascii_case(extension));
-    }
-    false
 }
 
 pub fn traverse_directory(
@@ -50,7 +41,9 @@ pub fn traverse_directory(
             if entry.file_type().map_or(false, |ft| ft.is_file()) {
                 n_files_analyzed += 1;
                 let path = entry.into_path();
-                if !file_extensions.is_empty() && !has_allowed_extension(&path, file_extensions) {
+                if !file_extensions.is_empty()
+                    && !file_utils::has_allowed_extension(&path, file_extensions)
+                {
                     return None;
                 }
                 let size = get_file_size(&path);
