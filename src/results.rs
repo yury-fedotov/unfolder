@@ -25,18 +25,30 @@ impl AnalysisResults {
         println!("{}", format!("Elapsed time: {} ms", elapsed_ms).blue());
 
         // Format file_count and dir_count with a thousand separators
-        let file_count_formatted = self
+        let n_files_identified_formatted = self
             .complete_statistics
-            .n_files_analyzed
+            .n_files_identified
             .to_formatted_string(&Locale::en);
         let dir_count_formatted = self
             .complete_statistics
             .n_directories_visited
             .to_formatted_string(&Locale::en);
+        let n_files_considered_formatted = self
+            .complete_statistics
+            .n_files_considered
+            .to_formatted_string(&Locale::en);
+        let n_files_hashed_formatted = self
+            .complete_statistics
+            .n_files_hashed
+            .to_formatted_string(&Locale::en);
 
         println!(
             "{}",
-            format!("Number of files analyzed: {}", file_count_formatted).green()
+            format!(
+                "Number of files identified: {}",
+                n_files_identified_formatted
+            )
+            .green()
         );
         println!(
             "{}",
@@ -49,6 +61,18 @@ impl AnalysisResults {
                 self.complete_statistics.max_depth_visited
             )
             .green()
+        );
+        println!(
+            "{}",
+            format!(
+                "Number of files considered: {}",
+                n_files_considered_formatted
+            )
+            .green()
+        );
+        println!(
+            "{}",
+            format!("Number of files hashed: {}", n_files_hashed_formatted).green()
         );
 
         println!();

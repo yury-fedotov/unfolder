@@ -16,12 +16,3 @@ repos:
     rev: v1.23.6
     hooks:
       - id: typos
-
-  - repo: local
-    hooks:
-      - id: cargo-fmt
-        name: cargo fmt
-        entry: cargo fmt --
-        language: system
-        types: [rust]
-        pass_filenames: false # This makes it a lot faster
