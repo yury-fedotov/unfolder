@@ -22,6 +22,7 @@ fn get_size_by_alias(alias: &str) -> Option<usize> {
 
 pub struct CLIArgs {
     pub directory: String,
+    pub file_extensions: Vec<String>,
     pub min_file_size: usize,
     pub n_top: usize,
 }
@@ -35,6 +36,14 @@ pub fn parse_args() -> CLIArgs {
                 .help("The directory to traverse")
                 .required(true)
                 .index(1),
+        )
+        .arg(
+            Arg::new("file_extensions")
+                .help("List of file extensions to consider")
+                .short('e')
+                .long("extensions")
+                .num_args(0..)
+                .default_value(""),
         )
         .arg(
             Arg::new("min_file_size")
@@ -55,6 +64,16 @@ pub fn parse_args() -> CLIArgs {
         .get_one::<String>("directory")
         .expect("Directory argument missing")
         .clone();
+    // Handle file_extensions parsing
+    let file_extensions_str = matches
+        .get_one::<String>("file_extensions")
+        .expect("File extensions argument missing")
+        .clone();
+    let file_extensions: Vec<String> = if file_extensions_str.is_empty() {
+        Vec::new()
+    } else {
+        file_extensions_str.split(',').map(String::from).collect()
+    };
     let size_alias = matches
         .get_one::<String>("min_file_size")
         .expect("Size argument missing");
@@ -67,6 +86,7 @@ pub fn parse_args() -> CLIArgs {
 
     CLIArgs {
         directory,
+        file_extensions,
         min_file_size,
         n_top,
     }

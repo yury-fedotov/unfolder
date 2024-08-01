@@ -2,7 +2,7 @@ use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
 use std::io::{self, Read};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Clone)]
 pub struct FileInfo {
@@ -95,4 +95,13 @@ mod tests {
         let size = get_file_size(&non_existent_path);
         assert_eq!(size, 0);
     }
+}
+
+pub fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
+    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
+        return extensions
+            .iter()
+            .any(|ext| ext.eq_ignore_ascii_case(extension));
+    }
+    false
 }

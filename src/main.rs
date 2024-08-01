@@ -15,7 +15,8 @@ fn main() {
 
     let args = parse_args();
 
-    let traversal_output = traverse_directory(&args.directory, &args.min_file_size);
+    let traversal_output =
+        traverse_directory(&args.directory, &args.min_file_size, &args.file_extensions);
     let largest_files = get_largest_files(&traversal_output.file_infos, &args.n_top);
     let duplicate_groups = find_duplicate_groups(&traversal_output.file_infos);
 
