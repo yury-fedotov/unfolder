@@ -2,6 +2,9 @@ use crate::file_utils;
 use crate::file_utils::FileInfo;
 use crate::file_utils::{calculate_hash, get_file_size};
 use ignore::WalkBuilder;
+use rayon::prelude::*;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Arc;
 
 pub struct DirectoryTraversalOutput {
     pub complete_statistics: CompleteTraversalStatistics,
@@ -19,10 +22,11 @@ pub fn traverse_directory(
     min_file_size: &usize,
     file_extensions: &[String],
 ) -> DirectoryTraversalOutput {
-    let mut n_directories_visited = 1;
-    let mut max_depth_visited = 0;
-    let mut n_files_analyzed = 0;
-    let file_infos: Vec<FileInfo> = WalkBuilder::new(dir)
+    let n_directories_visited = Arc::new(AtomicUsize::new(1));
+    let max_depth_visited = Arc::new(AtomicUsize::new(0));
+    let n_files_analyzed = Arc::new(AtomicUsize::new(0));
+
+    let entries: Vec<_> = WalkBuilder::new(dir)
         .hidden(true)
         .ignore(true)
         .git_ignore(true)
@@ -30,16 +34,25 @@ pub fn traverse_directory(
         .git_exclude(true)
         .build()
         .filter_map(|e| e.ok())
+        .collect();
+
+    let max_depth_visited_clone = Arc::clone(&max_depth_visited);
+    let n_directories_visited_clone = Arc::clone(&n_directories_visited);
+    let n_files_analyzed_clone = Arc::clone(&n_files_analyzed);
+
+    let file_infos: Vec<FileInfo> = entries
+        .into_par_iter() // Use Rayon parallel iterator
         .filter_map(|entry| {
             let depth = entry.depth();
-            if depth > max_depth_visited {
-                max_depth_visited = depth;
+            if depth > max_depth_visited_clone.load(Ordering::Relaxed) {
+                max_depth_visited_clone.store(depth, Ordering::Relaxed);
             }
             if entry.file_type().map_or(false, |ft| ft.is_dir()) {
-                n_directories_visited += 1;
+                n_directories_visited_clone.fetch_add(1, Ordering::Relaxed);
+                return None;
             }
             if entry.file_type().map_or(false, |ft| ft.is_file()) {
-                n_files_analyzed += 1;
+                n_files_analyzed_clone.fetch_add(1, Ordering::Relaxed);
                 let path = entry.into_path();
                 if !file_extensions.is_empty()
                     && !file_utils::has_allowed_extension(&path, file_extensions)
@@ -60,10 +73,11 @@ pub fn traverse_directory(
         .collect();
 
     let complete_statistics = CompleteTraversalStatistics {
-        n_files_analyzed,
-        n_directories_visited,
-        max_depth_visited,
+        n_files_analyzed: n_files_analyzed.load(Ordering::Relaxed),
+        n_directories_visited: n_directories_visited.load(Ordering::Relaxed),
+        max_depth_visited: max_depth_visited.load(Ordering::Relaxed),
     };
+
     DirectoryTraversalOutput {
         complete_statistics,
         file_infos,
