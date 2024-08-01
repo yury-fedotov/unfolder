@@ -9,7 +9,9 @@ pub struct DirectoryTraversalOutput {
 }
 
 pub struct CompleteTraversalStatistics {
-    pub n_files_analyzed: usize,
+    pub n_files_identified: usize,
+    pub n_files_considered: usize,
+    pub n_files_hashed: usize,
     pub n_directories_visited: usize,
     pub max_depth_visited: usize,
 }
@@ -21,7 +23,9 @@ pub fn traverse_directory(
 ) -> DirectoryTraversalOutput {
     let mut n_directories_visited = 1;
     let mut max_depth_visited = 0;
-    let mut n_files_analyzed = 0;
+    let mut n_files_identified = 0;
+    let mut n_files_considered = 0;
+    let mut n_files_hashed = 0;
     let file_infos: Vec<FileInfo> = WalkBuilder::new(dir)
         .standard_filters(true)
         .build()
@@ -35,15 +39,20 @@ pub fn traverse_directory(
                 n_directories_visited += 1;
             }
             if entry.file_type().map_or(false, |ft| ft.is_file()) {
-                n_files_analyzed += 1;
+                n_files_identified += 1;
                 let path = entry.into_path();
                 if !file_extensions.is_empty()
                     && !file_utils::has_allowed_extension(&path, file_extensions)
                 {
                     return None;
                 }
+                n_files_considered += 1;
                 let size = get_file_size(&path);
-                let hash = if size > *min_file_size as u64 {
+                let should_calculate_hash = size > *min_file_size as u64;
+                if should_calculate_hash {
+                    n_files_hashed += 1;
+                }
+                let hash = if should_calculate_hash {
                     calculate_hash(&path).unwrap_or_else(|_| String::new())
                 } else {
                     String::new()
@@ -56,7 +65,9 @@ pub fn traverse_directory(
         .collect();
 
     let complete_statistics = CompleteTraversalStatistics {
-        n_files_analyzed,
+        n_files_identified,
+        n_files_considered,
+        n_files_hashed,
         n_directories_visited,
         max_depth_visited,
     };
