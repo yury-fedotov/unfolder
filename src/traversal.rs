@@ -23,11 +23,7 @@ pub fn traverse_directory(
     let mut max_depth_visited = 0;
     let mut n_files_analyzed = 0;
     let file_infos: Vec<FileInfo> = WalkBuilder::new(dir)
-        .hidden(true)
-        .ignore(true)
-        .git_ignore(true)
-        .git_global(true)
-        .git_exclude(true)
+        .standard_filters(true)
         .build()
         .filter_map(|e| e.ok())
         .filter_map(|entry| {
