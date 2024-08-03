@@ -1,8 +1,9 @@
-use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
+use std::hash::Hasher;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
+use twox_hash::XxHash64;
 
 #[derive(Clone)]
 pub struct FileInfo {
@@ -32,16 +33,16 @@ pub fn get_file_size(path: &PathBuf) -> u64 {
 
 pub fn calculate_hash(path: &PathBuf) -> io::Result<String> {
     let mut file = fs::File::open(path)?;
-    let mut hasher = Sha256::new();
+    let mut hasher = XxHash64::with_seed(0); // Initialize with a seed, e.g., 0
     let mut buffer = [0; 1024];
     loop {
         let n = file.read(&mut buffer)?;
         if n == 0 {
             break;
         }
-        hasher.update(&buffer[..n]);
+        hasher.write(&buffer[..n]);
     }
-    let hash = hasher.finalize();
+    let hash = hasher.finish();
     Ok(format!("{:x}", hash))
 }
 
