@@ -33,7 +33,7 @@ pub fn get_file_size(path: &PathBuf) -> u64 {
 
 pub fn calculate_hash(path: &PathBuf) -> io::Result<String> {
     let mut file = fs::File::open(path)?;
-    let mut hasher = XxHash64::with_seed(0); // Initialize with a seed, e.g., 0
+    let mut hasher = XxHash64::with_seed(0);
     let mut buffer = [0; 1024];
     loop {
         let n = file.read(&mut buffer)?;
