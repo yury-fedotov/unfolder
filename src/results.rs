@@ -62,22 +62,39 @@ impl AnalysisResults {
                 .bold()
                 .color(OutputFormat::Numbers.color()),
         );
-        println!(
-            "{} {} identified, {} of relevant types, {} analyzed for content",
-            "📄 Files:".to_string().bold(),
-            n_files_identified_formatted
-                .to_string()
-                .bold()
-                .color(OutputFormat::Numbers.color()),
-            n_files_considered_formatted
-                .to_string()
-                .bold()
-                .color(OutputFormat::Numbers.color()),
-            n_files_hashed_formatted
-                .to_string()
-                .bold()
-                .color(OutputFormat::Numbers.color()),
-        );
+        if self.complete_statistics.n_files_identified
+            != self.complete_statistics.n_files_considered
+        {
+            println!(
+                "{} {} identified, {} of relevant types, {} largest are analyzed for being duplicates",
+                "📄 Files:".to_string().bold(),
+                n_files_identified_formatted
+                    .to_string()
+                    .bold()
+                    .color(OutputFormat::Numbers.color()),
+                n_files_considered_formatted
+                    .to_string()
+                    .bold()
+                    .color(OutputFormat::Numbers.color()),
+                n_files_hashed_formatted
+                    .to_string()
+                    .bold()
+                    .color(OutputFormat::Numbers.color()),
+            );
+        } else {
+            println!(
+                "{} {} identified, {} largest are analyzed for being duplicates",
+                "📄 Files:".to_string().bold(),
+                n_files_identified_formatted
+                    .to_string()
+                    .bold()
+                    .color(OutputFormat::Numbers.color()),
+                n_files_hashed_formatted
+                    .to_string()
+                    .bold()
+                    .color(OutputFormat::Numbers.color()),
+            );
+        }
 
         println!();
         println!(
