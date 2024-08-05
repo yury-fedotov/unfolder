@@ -6,6 +6,6 @@
 A CLI tool to find:
 - [x] Largest
 - [x] Duplicated
-- [] ... to be continued
+- [ ] ... to be continued
 
 Files in directories of any size and structure extremely fast.
