@@ -134,9 +134,12 @@ impl AnalysisResults {
             println!("Hash: {}", hash);
             for file in group {
                 println!(
-                    "{} (size: {})",
-                    file.path.display(),
-                    format_size(file.size as usize)
+                    "{}: {}",
+                    file.path
+                        .display()
+                        .to_string()
+                        .color(OutputFormat::FilePaths.color()),
+                    format_size(file.size as usize).color(OutputFormat::FileSizes.color())
                 );
             }
             println!();
