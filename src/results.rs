@@ -130,8 +130,8 @@ impl AnalysisResults {
         );
 
         println!();
-        for (hash, group) in &self.duplicate_groups {
-            println!("Hash: {}", hash);
+        for (index, (_hash, group)) in self.duplicate_groups.iter().enumerate() {
+            println!("Group {}:", index + 1);
             for file in group {
                 println!(
                     "{}: {}",
