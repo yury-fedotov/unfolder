@@ -14,7 +14,7 @@ impl OutputFormat {
     pub fn color(&self) -> Color {
         match self {
             OutputFormat::Headers => Color::BrightBlue,
-            OutputFormat::Numbers => Color::Blue,
+            OutputFormat::Numbers => Color::Green,
             OutputFormat::FilePaths => Color::Cyan,
             OutputFormat::FileSizes => Color::Magenta,
         }
