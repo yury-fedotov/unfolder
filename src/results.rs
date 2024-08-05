@@ -5,7 +5,6 @@ use crate::file_sizes::format_size;
 use colored::*;
 use num_format::{Locale, ToFormattedString};
 
-/// Struct to hold the results of the file analysis
 pub struct AnalysisResults {
     pub elapsed_time: std::time::Duration,
     pub complete_statistics: CompleteTraversalStatistics,
@@ -13,11 +12,31 @@ pub struct AnalysisResults {
     pub duplicate_groups: Vec<(String, Vec<FileInfo>)>,
 }
 
+enum OutputFormat {
+    Headers,
+    Numbers,
+    FilePaths,
+    FileSizes,
+}
+
+impl OutputFormat {
+    fn color(&self) -> Color {
+        match self {
+            OutputFormat::Headers => Color::BrightBlue,
+            OutputFormat::Numbers => Color::Blue,
+            OutputFormat::FilePaths => Color::Cyan,
+            OutputFormat::FileSizes => Color::Magenta,
+        }
+    }
+}
+
+// const TITLES_COLOR: CustomColor = CustomColor::new(120, 120, 120);
+
 impl AnalysisResults {
-    /// Prints the results of the file analysis
+
     pub fn print_results(&self) {
         println!();
-        println!("{}", "Run overview:".bold().underline().bright_blue());
+        println!("{}", "Run overview:".bold().underline().color(OutputFormat::Headers.color()));
 
         // Convert elapsed time to milliseconds and round to nearest integer
         let elapsed_ms = (self.elapsed_time.as_millis() as f64).round();
@@ -25,7 +44,7 @@ impl AnalysisResults {
         println!(
             "{} {}",
             "⏱️ Elapsed time:".to_string().bold(),
-            format!("{} ms", elapsed_ms).bold().blue()
+            format!("{} ms", elapsed_ms).bold().color(OutputFormat::Numbers.color())
         );
 
         // Format file_count and dir_count with a thousand separators
@@ -47,37 +66,35 @@ impl AnalysisResults {
             .to_formatted_string(&Locale::en);
 
         println!(
-            "{} {} {} {} {}",
+            "{} {} traversed, {} levels of nesting",
             "📂 Directories:".to_string().bold(),
-            format!("{}", dir_count_formatted).bold().blue(),
-            "traversed,".to_string(),
-            format!("{}", self.complete_statistics.max_depth_visited).bold().blue(),
-            "levels of nesting".to_string(),
+            format!("{}", dir_count_formatted).bold().color(OutputFormat::Numbers.color()),
+            format!("{}", self.complete_statistics.max_depth_visited).bold().color(OutputFormat::Numbers.color()),
         );
         println!(
             "{} {} {} {} {} {} {}",
             "📄 Files:".to_string().bold(),
-            format!("{}", n_files_identified_formatted).bold().blue(),
-            "identified,".to_string(),
-            format!("{}", n_files_considered_formatted).bold().blue(),
-            "of relevant types,".to_string(),
-            format!("{}", n_files_hashed_formatted).bold().blue(),
-            "analyzed for content".to_string(),
+            format!("{}", n_files_identified_formatted).bold().color(OutputFormat::Numbers.color()),
+            "identified,",
+            format!("{}", n_files_considered_formatted).bold().color(OutputFormat::Numbers.color()),
+            "of relevant types,",
+            format!("{}", n_files_hashed_formatted).bold().color(OutputFormat::Numbers.color()),
+            "analyzed for content",
         );
 
         println!();
-        println!("{}", "Largest files:".bold().underline().bright_blue());
+        println!("{}", "Largest files:".bold().underline().color(OutputFormat::Headers.color()));
 
         for file in &self.largest_files {
             println!(
                 "{}: {}",
-                file.path.display().to_string().cyan(),
-                format_size(file.size as usize).magenta()
+                file.path.display().to_string().color(OutputFormat::FilePaths.color()),
+                format_size(file.size as usize).color(OutputFormat::FileSizes.color())
             );
         }
 
         println!();
-        println!("{}", "Duplicated files:".bold().underline().bright_blue());
+        println!("{}", "Duplicated files:".bold().underline().color(OutputFormat::Headers.color()));
 
         println!();
         for (hash, group) in &self.duplicate_groups {
