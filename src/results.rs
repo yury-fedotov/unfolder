@@ -1,8 +1,6 @@
 use crate::file_utils::FileInfo;
+use crate::output_format::{print_file_path_with_size, OutputFormat};
 use crate::traversal::CompleteTraversalStatistics;
-
-use crate::file_sizes::format_size;
-use crate::output_format::OutputFormat;
 use colored::*;
 use num_format::{Locale, ToFormattedString};
 
@@ -91,14 +89,7 @@ impl AnalysisResults {
         );
 
         for file in &self.largest_files {
-            println!(
-                "{}: {}",
-                file.path
-                    .display()
-                    .to_string()
-                    .color(OutputFormat::FilePaths.color()),
-                format_size(file.size as usize).color(OutputFormat::FileSizes.color())
-            );
+            print_file_path_with_size(file)
         }
 
         println!();
@@ -114,14 +105,7 @@ impl AnalysisResults {
         for (index, (_hash, group)) in self.duplicate_groups.iter().enumerate() {
             println!("Group {}:", index + 1);
             for file in group {
-                println!(
-                    "{}: {}",
-                    file.path
-                        .display()
-                        .to_string()
-                        .color(OutputFormat::FilePaths.color()),
-                    format_size(file.size as usize).color(OutputFormat::FileSizes.color())
-                );
+                print_file_path_with_size(file)
             }
             println!();
         }

@@ -1,4 +1,7 @@
+use crate::file_sizes::format_size;
+use crate::file_utils::FileInfo;
 use colored::Color;
+use colored::*;
 
 pub enum OutputFormat {
     Headers,
@@ -16,4 +19,15 @@ impl OutputFormat {
             OutputFormat::FileSizes => Color::Magenta,
         }
     }
+}
+
+pub fn print_file_path_with_size(file: &FileInfo) {
+    println!(
+        "{}: {}",
+        file.path
+            .display()
+            .to_string()
+            .color(OutputFormat::FilePaths.color()),
+        format_size(file.size as usize).color(OutputFormat::FileSizes.color())
+    );
 }
