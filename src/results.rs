@@ -1,11 +1,9 @@
 use crate::file_utils::FileInfo;
+use crate::output_format::{print_file_path_with_size, OutputFormat};
 use crate::traversal::CompleteTraversalStatistics;
-
-use crate::file_sizes::format_size;
 use colored::*;
 use num_format::{Locale, ToFormattedString};
 
-/// Struct to hold the results of the file analysis
 pub struct AnalysisResults {
     pub elapsed_time: std::time::Duration,
     pub complete_statistics: CompleteTraversalStatistics,
@@ -14,15 +12,26 @@ pub struct AnalysisResults {
 }
 
 impl AnalysisResults {
-    /// Prints the results of the file analysis
     pub fn print_results(&self) {
         println!();
-        println!("{}", "Run overview:".bold().underline().yellow());
+        println!(
+            "{}",
+            "Run overview:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
 
         // Convert elapsed time to milliseconds and round to nearest integer
         let elapsed_ms = (self.elapsed_time.as_millis() as f64).round();
 
-        println!("{}", format!("Elapsed time: {} ms", elapsed_ms).blue());
+        println!(
+            "{} {}",
+            "⏱️ Elapsed time:".to_string().bold(),
+            format!("{} ms", elapsed_ms)
+                .bold()
+                .color(OutputFormat::Numbers.color())
+        );
 
         // Format file_count and dir_count with a thousand separators
         let n_files_identified_formatted = self
@@ -43,56 +52,64 @@ impl AnalysisResults {
             .to_formatted_string(&Locale::en);
 
         println!(
-            "{}",
-            format!(
-                "Number of files identified: {}",
-                n_files_identified_formatted
-            )
-            .green()
+            "{} {} traversed, {} levels of nesting",
+            "📂 Directories:".to_string().bold(),
+            dir_count_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            format!("{}", self.complete_statistics.max_depth_visited)
+                .bold()
+                .color(OutputFormat::Numbers.color()),
         );
         println!(
-            "{}",
-            format!("Number of directories traversed: {}", dir_count_formatted).green()
-        );
-        println!(
-            "{}",
-            format!(
-                "Deepest level of folder nesting: {}",
-                self.complete_statistics.max_depth_visited
-            )
-            .green()
-        );
-        println!(
-            "{}",
-            format!(
-                "Number of files considered: {}",
-                n_files_considered_formatted
-            )
-            .green()
-        );
-        println!(
-            "{}",
-            format!("Number of files hashed: {}", n_files_hashed_formatted).green()
+            "{} {} identified, {} of relevant types, {} analyzed for content",
+            "📄 Files:".to_string().bold(),
+            n_files_identified_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            n_files_considered_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            n_files_hashed_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
         );
 
         println!();
-        println!("{}", "Largest files:".bold().underline().yellow());
+        println!(
+            "{}",
+            "Largest files:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
 
         for file in &self.largest_files {
-            println!(
-                "{}: {}",
-                file.path.display().to_string().cyan(),
-                format_size(file.size as usize).magenta()
-            );
+            print_file_path_with_size(file)
         }
 
         println!();
-        for (hash, group) in &self.duplicate_groups {
-            println!("Hash: {}", hash);
-            for file in group {
-                println!("{} (size: {})", file.path.display(), file.size);
+        println!(
+            "{}",
+            "Duplicated files:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
+
+        if !self.duplicate_groups.is_empty() {
+            for (index, (_hash, group)) in self.duplicate_groups.iter().enumerate() {
+                println!("Group {}:", index + 1);
+                for file in group {
+                    print_file_path_with_size(file)
+                }
             }
-            println!();
+        } else {
+            println!("None found!");
         }
     }
 }

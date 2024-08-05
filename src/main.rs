@@ -1,6 +1,7 @@
 mod cli;
 mod file_sizes;
 mod file_utils;
+mod output_format;
 mod results;
 mod traversal;
 

@@ -67,8 +67,21 @@ pub fn find_duplicate_groups(files: &[FileInfo]) -> Vec<(String, Vec<FileInfo>)>
 
     // Filter out groups with empty hashes and sort by group size in descending order
     let mut groups: Vec<_> = hash_map.into_iter().filter(|(_, v)| v.len() > 1).collect();
-    groups.sort_by(|a, b| b.1.len().cmp(&a.1.len()).reverse());
+    groups.sort_by(|a, b| {
+        let a_size = a.1.first().map_or(0, |file| file.size);
+        let b_size = b.1.first().map_or(0, |file| file.size);
+        a_size.cmp(&b_size).reverse()
+    });
     groups
+}
+
+pub fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
+    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
+        return extensions
+            .iter()
+            .any(|ext| ext.eq_ignore_ascii_case(extension));
+    }
+    false
 }
 
 #[cfg(test)]
@@ -96,13 +109,4 @@ mod tests {
         let size = get_file_size(&non_existent_path);
         assert_eq!(size, 0);
     }
-}
-
-pub fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
-    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
-        return extensions
-            .iter()
-            .any(|ext| ext.eq_ignore_ascii_case(extension));
-    }
-    false
 }
