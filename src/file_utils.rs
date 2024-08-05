@@ -71,6 +71,15 @@ pub fn find_duplicate_groups(files: &[FileInfo]) -> Vec<(String, Vec<FileInfo>)>
     groups
 }
 
+pub fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
+    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
+        return extensions
+            .iter()
+            .any(|ext| ext.eq_ignore_ascii_case(extension));
+    }
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -96,13 +105,4 @@ mod tests {
         let size = get_file_size(&non_existent_path);
         assert_eq!(size, 0);
     }
-}
-
-pub fn has_allowed_extension(path: &Path, extensions: &[String]) -> bool {
-    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
-        return extensions
-            .iter()
-            .any(|ext| ext.eq_ignore_ascii_case(extension));
-    }
-    false
 }

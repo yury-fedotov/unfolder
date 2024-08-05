@@ -33,10 +33,15 @@ impl OutputFormat {
 // const TITLES_COLOR: CustomColor = CustomColor::new(120, 120, 120);
 
 impl AnalysisResults {
-
     pub fn print_results(&self) {
         println!();
-        println!("{}", "Run overview:".bold().underline().color(OutputFormat::Headers.color()));
+        println!(
+            "{}",
+            "Run overview:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
 
         // Convert elapsed time to milliseconds and round to nearest integer
         let elapsed_ms = (self.elapsed_time.as_millis() as f64).round();
@@ -44,7 +49,9 @@ impl AnalysisResults {
         println!(
             "{} {}",
             "⏱️ Elapsed time:".to_string().bold(),
-            format!("{} ms", elapsed_ms).bold().color(OutputFormat::Numbers.color())
+            format!("{} ms", elapsed_ms)
+                .bold()
+                .color(OutputFormat::Numbers.color())
         );
 
         // Format file_count and dir_count with a thousand separators
@@ -68,39 +75,69 @@ impl AnalysisResults {
         println!(
             "{} {} traversed, {} levels of nesting",
             "📂 Directories:".to_string().bold(),
-            format!("{}", dir_count_formatted).bold().color(OutputFormat::Numbers.color()),
-            format!("{}", self.complete_statistics.max_depth_visited).bold().color(OutputFormat::Numbers.color()),
+            dir_count_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            format!("{}", self.complete_statistics.max_depth_visited)
+                .bold()
+                .color(OutputFormat::Numbers.color()),
         );
         println!(
-            "{} {} {} {} {} {} {}",
+            "{} {} identified, {} of relevant types, {} analyzed for content",
             "📄 Files:".to_string().bold(),
-            format!("{}", n_files_identified_formatted).bold().color(OutputFormat::Numbers.color()),
-            "identified,",
-            format!("{}", n_files_considered_formatted).bold().color(OutputFormat::Numbers.color()),
-            "of relevant types,",
-            format!("{}", n_files_hashed_formatted).bold().color(OutputFormat::Numbers.color()),
-            "analyzed for content",
+            n_files_identified_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            n_files_considered_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
+            n_files_hashed_formatted
+                .to_string()
+                .bold()
+                .color(OutputFormat::Numbers.color()),
         );
 
         println!();
-        println!("{}", "Largest files:".bold().underline().color(OutputFormat::Headers.color()));
+        println!(
+            "{}",
+            "Largest files:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
 
         for file in &self.largest_files {
             println!(
                 "{}: {}",
-                file.path.display().to_string().color(OutputFormat::FilePaths.color()),
+                file.path
+                    .display()
+                    .to_string()
+                    .color(OutputFormat::FilePaths.color()),
                 format_size(file.size as usize).color(OutputFormat::FileSizes.color())
             );
         }
 
         println!();
-        println!("{}", "Duplicated files:".bold().underline().color(OutputFormat::Headers.color()));
+        println!(
+            "{}",
+            "Duplicated files:"
+                .bold()
+                .underline()
+                .color(OutputFormat::Headers.color())
+        );
 
         println!();
         for (hash, group) in &self.duplicate_groups {
             println!("Hash: {}", hash);
             for file in group {
-                println!("{} (size: {})", file.path.display(), format_size(file.size as usize));
+                println!(
+                    "{} (size: {})",
+                    file.path.display(),
+                    format_size(file.size as usize)
+                );
             }
             println!();
         }
