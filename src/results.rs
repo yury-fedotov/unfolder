@@ -22,7 +22,7 @@ impl AnalysisResults {
         // Convert elapsed time to milliseconds and round to nearest integer
         let elapsed_ms = (self.elapsed_time.as_millis() as f64).round();
 
-        println!("{}", format!("Elapsed time: {} ms", elapsed_ms).blue());
+        println!("{}", format!("⏱️ Elapsed time: {} ms", elapsed_ms).blue());
 
         // Format file_count and dir_count with a thousand separators
         let n_files_identified_formatted = self
@@ -45,19 +45,19 @@ impl AnalysisResults {
         println!(
             "{}",
             format!(
-                "Number of files identified: {}",
+                "📄 Number of files identified: {}",
                 n_files_identified_formatted
             )
             .green()
         );
         println!(
             "{}",
-            format!("Number of directories traversed: {}", dir_count_formatted).green()
+            format!("📂 Number of directories traversed: {}", dir_count_formatted).green()
         );
         println!(
             "{}",
             format!(
-                "Deepest level of folder nesting: {}",
+                "🕳️ Deepest level of folder nesting: {}",
                 self.complete_statistics.max_depth_visited
             )
             .green()
