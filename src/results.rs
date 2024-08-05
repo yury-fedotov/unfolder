@@ -102,13 +102,11 @@ impl AnalysisResults {
         );
 
         if !self.duplicate_groups.is_empty() {
-            println!();
             for (index, (_hash, group)) in self.duplicate_groups.iter().enumerate() {
                 println!("Group {}:", index + 1);
                 for file in group {
                     print_file_path_with_size(file)
                 }
-                println!();
             }
         } else {
             println!("None found!");

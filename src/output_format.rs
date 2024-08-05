@@ -23,7 +23,7 @@ impl OutputFormat {
 
 pub fn print_file_path_with_size(file: &FileInfo) {
     println!(
-        "{}: {}",
+        "- {}: {}",
         file.path
             .display()
             .to_string()
