@@ -2,6 +2,7 @@ use crate::file_utils::FileInfo;
 use crate::traversal::CompleteTraversalStatistics;
 
 use crate::file_sizes::format_size;
+use crate::output_format::OutputFormat;
 use colored::*;
 use num_format::{Locale, ToFormattedString};
 
@@ -11,26 +12,6 @@ pub struct AnalysisResults {
     pub largest_files: Vec<FileInfo>,
     pub duplicate_groups: Vec<(String, Vec<FileInfo>)>,
 }
-
-enum OutputFormat {
-    Headers,
-    Numbers,
-    FilePaths,
-    FileSizes,
-}
-
-impl OutputFormat {
-    fn color(&self) -> Color {
-        match self {
-            OutputFormat::Headers => Color::BrightBlue,
-            OutputFormat::Numbers => Color::Blue,
-            OutputFormat::FilePaths => Color::Cyan,
-            OutputFormat::FileSizes => Color::Magenta,
-        }
-    }
-}
-
-// const TITLES_COLOR: CustomColor = CustomColor::new(120, 120, 120);
 
 impl AnalysisResults {
     pub fn print_results(&self) {
