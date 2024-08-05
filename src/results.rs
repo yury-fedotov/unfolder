@@ -45,34 +45,20 @@ impl AnalysisResults {
         println!(
             "{}",
             format!(
-                "📄 Number of files identified: {}",
-                n_files_identified_formatted
-            )
-            .green()
-        );
-        println!(
-            "{}",
-            format!("📂 Number of directories traversed: {}", dir_count_formatted).green()
-        );
-        println!(
-            "{}",
-            format!(
-                "🕳️ Deepest level of folder nesting: {}",
-                self.complete_statistics.max_depth_visited
+                "📂 Directories: {} traversed, {} levels of nesting",
+                dir_count_formatted, self.complete_statistics.max_depth_visited,
             )
             .green()
         );
         println!(
             "{}",
             format!(
-                "Number of files considered: {}",
-                n_files_considered_formatted
+                "📄 Files: {} identified, {} considered, {} hashed",
+                n_files_identified_formatted,
+                n_files_considered_formatted,
+                n_files_hashed_formatted
             )
             .green()
-        );
-        println!(
-            "{}",
-            format!("Number of files hashed: {}", n_files_hashed_formatted).green()
         );
 
         println!();
