@@ -53,7 +53,7 @@ impl AnalysisResults {
         println!(
             "{}",
             format!(
-                "📄 Files: {} identified, {} considered, {} hashed",
+                "📄 Files: {} identified, {} of relevant types, {} are analyzed for content",
                 n_files_identified_formatted,
                 n_files_considered_formatted,
                 n_files_hashed_formatted
@@ -73,10 +73,13 @@ impl AnalysisResults {
         }
 
         println!();
+        println!("{}", "Duplicated files:".bold().underline().yellow());
+
+        println!();
         for (hash, group) in &self.duplicate_groups {
             println!("Hash: {}", hash);
             for file in group {
-                println!("{} (size: {})", file.path.display(), file.size);
+                println!("{} (size: {})", file.path.display(), format_size(file.size as usize));
             }
             println!();
         }
