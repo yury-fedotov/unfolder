@@ -10,10 +10,9 @@ An extremely fast directory exploration tool to find:
 
 In directories of any size and structure.
 
-<div align="center">
-   <img alt="Shows a bar chart with benchmark results." src="/assets/cpython_output.png" width="600">
-
-   <i>Analyzing the CPython codebase.</i>
+<div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+    <img src="/assets/cpython_output.png" alt="A bar chart with benchmark results" width="600"/>
+    <p>Analyzing the CPython codebase</p>
 </div>
 
 ## Use cases
