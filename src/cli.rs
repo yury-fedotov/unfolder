@@ -29,7 +29,7 @@ pub struct CLIArgs {
 
 pub fn parse_args() -> CLIArgs {
     let matches = Command::new("Directory Traversal")
-        .version("1.0")
+        .version("0.0.1")
         .long_about("Traverses a directory and processes files based on extensions")
         .arg(
             Arg::new("directory")
@@ -49,7 +49,7 @@ pub fn parse_args() -> CLIArgs {
             Arg::new("min_file_size")
                 .help("Minimum file size to consider (alias)")
                 .long("min_file_size")
-                .default_value("document"),
+                .default_value("code"),
         )
         .arg(
             Arg::new("n_top")
@@ -82,7 +82,7 @@ pub fn parse_args() -> CLIArgs {
         .map(|s| s.parse().unwrap_or(5)) // Parse the value and default to 5 on error
         .unwrap_or(5);
 
-    let min_file_size = get_size_by_alias(size_alias.as_str()).unwrap_or(MEGABYTE); // Default to 1 MB if alias not found
+    let min_file_size = get_size_by_alias(size_alias.as_str()).unwrap_or(100 * KILOBYTE);
 
     CLIArgs {
         directory,
