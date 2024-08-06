@@ -40,6 +40,11 @@ _Time values are measured during local runs on a MacBook Pro with Apple M1 Max c
 
 ## Getting started
 
+> [!WARNING]
+> This project is in its early stages of development and may contain bugs or incomplete features. It is provided "as is" without warranty of any kind, either expressed or implied, including but not limited to the implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+>
+> **Use at your own risk.** The author is not responsible for any damage, data loss, or other issues that may arise from using this software.
+
 ### Installation
 
 Currently, only installation from source is supported:
