@@ -29,7 +29,7 @@ pub struct CLIArgs {
 
 pub fn parse_args() -> CLIArgs {
     let matches = Command::new("Directory Traversal")
-        .version("1.0")
+        .version("0.0.1")
         .long_about("Traverses a directory and processes files based on extensions")
         .arg(
             Arg::new("directory")
