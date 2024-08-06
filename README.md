@@ -1,6 +1,6 @@
 # Unfolder
 
-![License: MIT](https://img.shields.io/badge/License-MIT-8d282d)
+![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 An extremely fast directory exploration tool to find:
