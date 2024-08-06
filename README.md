@@ -12,8 +12,8 @@ In directories of any size and structure.
 
 <div style="text-align: center;">
    <div style="display: inline-block; text-align: center;">
-      <img src="/assets/cpython_output.png" alt="A bar chart with benchmark results" width="600"/>
-      <p>Analyzing the CPython codebase</p>
+      <img src="/assets/airflow_demo.png" alt="A bar chart with benchmark results" width="600"/>
+      <p>Analyzing the Apache Airflow codebase</p>
    </div>
 </div>
 
@@ -30,11 +30,13 @@ Unfolder analyzes codebases of large open-source projects in under half a second
 
 | Project                                             | Files | Folders | Elapsed time, ms |
 |-----------------------------------------------------|-------|---------|------------------|
-| [Apache Airflow](https://github.com/apache/airflow) | 7,558 | 1,713   | 409              |
-| [Ruff](https://github.com/astral-sh/ruff)           | 7,374 | 615     | 328              |
-| [React](https://github.com/facebook/react)          | 6,467 | 532     | 406              |
-| [CPython](https://github.com/python/cpython)        | 5,182 | 420     | 253              |
-| [Kedro](https://github.com/kedro-org/kedro)         | 527   | 122     | 152              |
+| [Apache Airflow](https://github.com/apache/airflow) | 7,558 | 1,713   | 310              |
+| [Ruff](https://github.com/astral-sh/ruff)           | 7,374 | 615     | 182              |
+| [React](https://github.com/facebook/react)          | 6,467 | 532     | 156              |
+| [CPython](https://github.com/python/cpython)        | 5,182 | 420     | 136              |
+| [Kedro](https://github.com/kedro-org/kedro)         | 527   | 122     | 176              |
+
+_Time values are measured during local runs on a MacBook Pro with Apple M1 Max chip, 32 GB RAM._
 
 ## Getting started
 
