@@ -13,7 +13,7 @@ In directories of any size and structure.
 <div style="text-align: center;">
    <div style="display: inline-block; text-align: center;">
       <img src="/assets/airflow_demo.png" alt="A bar chart with benchmark results"/>
-      <p>Analyzing the Apache Airflow codebase</p>
+      <p><i>Example of analyzing the Apache Airflow codebase</i></p>
    </div>
 </div>
 
