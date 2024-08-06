@@ -10,6 +10,11 @@ An extremely fast directory exploration tool to find:
 
 In directories of any size and structure.
 
+<div align="center">
+   <img alt="Shows a bar chart with benchmark results." src="/assets/cpython_output.png" width="600">
+   <i>Analyzing the CPython codebase.</i>
+</div>
+
 ## Use cases
 
 Unfolder can be useful for:
