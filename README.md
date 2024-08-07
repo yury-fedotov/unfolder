@@ -17,6 +17,12 @@ In directories of any size and structure.
    </div>
 </div>
 
+- ⚡️ Analyzes large software projects in < 1 sec
+- 🤝 Respects `.gitignore` files
+- 🏠 Works locally and doesn't send your data anywhere
+- 📖 Performs only read operations and doesn't modify files
+- 💾 Has been tested on directories up to 100 GB of size, 20,000 files, 5,000 subfolders
+
 ## Use cases
 
 Unfolder can be useful for:
@@ -84,3 +90,15 @@ Would:
 * While identifying duplicates, ignore files smaller than `image` alias implies (10 Mb).
 
 You can also run `unfolder -h` to get info on arguments.
+
+## FAQ
+
+### What makes Unfolder fast?
+
+* Unfolder **is written in pure Rust**, which gives a very performant baseline.
+* It **leverages parallelism** to analyse files faster (as much faster as many cores you have).
+* To check for duplicate files, it **leverages a very fast hashing algorithm**: `xxHash64`.
+
+### Can Unfolder delete files?
+
+No. As can be validated from its open-source code, it performs only does read operations.
