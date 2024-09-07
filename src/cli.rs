@@ -26,6 +26,7 @@ fn get_size_by_alias(alias: &str) -> Option<usize> {
 #[command(about = "Traverses a directory and processes files based on extensions")]
 pub struct MainCommandArgs {
     /// The directory to traverse
+    #[arg(default_value = ".")]
     pub directory: String,
 
     /// List of file extensions to consider
